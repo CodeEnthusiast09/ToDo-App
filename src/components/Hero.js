@@ -1,22 +1,15 @@
 import React, { useState } from "react";
 
 export default function Hero() {
-  const [, setIsChecked] = useState(false);
+  const [todos, setTodos] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [newTodo, setNewTodo] = useState("");
 
-  const handleCheckboxChange = (event) => {
-    const newCheckedState = event.target.checked;
-    setIsChecked(newCheckedState);
-
-    if (newCheckedState === true) {
-      document.getElementById("todolist").style.textDecoration = "line-through";
-      document.getElementById("todolist").style.color =
-        "var(--DarkGrayishBlue)";
-    } else {
-      document.getElementById("todolist").style.textDecoration = "none";
-      document.getElementById("todolist").style.color =
-        "var(--VeryDarkGrayishBlue1)";
-    }
+  const handleCheckboxChange = (id) => {
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+    );
+    setTodos(updatedTodos);
   };
 
   const handleModeToggle = () => {
@@ -85,6 +78,40 @@ export default function Hero() {
       listStyle.borderBottomColor;
   };
 
+  const handleInputChange = (event) => {
+    setNewTodo(event.target.value);
+  };
+
+  const handleAddTodo = () => {
+    if (newTodo.trim() !== "") {
+      const newTodoItem = {
+        id: todos.length + 1,
+        text: newTodo,
+        isCompleted: false,
+      };
+      setTodos([...todos, newTodoItem]);
+      setNewTodo(""); // Reset the input field after adding the to-do
+    }
+  };
+
+  // TO CLEAR COMPLETED TODO ITEMS
+  const clearTodo = () => {
+    const filteredTodos = todos.filter((todo) => !todo.isCompleted);
+    setTodos(filteredTodos);
+  };
+
+  // TO SORT ACTIVE TODO ITEMS
+  const active = () => {
+    const filteredTodos = todos.filter((todo) => !todo.isCompleted);
+    setTodos(filteredTodos);
+  };
+
+  // TO SHOW COMPLETED TO DO LIST
+  const completed = () => {
+    const completedTodos = todos.filter((todo) => todo.isCompleted);
+    setTodos(completedTodos);
+  };
+
   return (
     <div className={`container ${!isDarkMode ? "light-mode" : "dark-mode"}`}>
       <header id="header">
@@ -93,35 +120,64 @@ export default function Hero() {
           <img
             id="dark_mode"
             onClick={handleModeToggle}
-            src={!isDarkMode ? "/assets/icon-sun.svg" : "/assets/icon-moon.svg"}
+            src={!isDarkMode ? "/assets/icon-moon.svg" : "/assets/icon-sun.svg"}
             alt={!isDarkMode ? "light_mode" : "dark_mode"}
           />
         </div>
         <label className="input">
-          <input id="input" placeholder="Create a new todo..." />
+          <input
+            id="input"
+            placeholder="Create a new todo..."
+            value={newTodo}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleAddTodo();
+              }
+            }}
+          />
         </label>
       </header>
       <div id="list-container">
-        <label id="list" onChange={handleCheckboxChange}>
-          <div className="todo">
-            <input className="checkbox" type="checkbox" />
-            <p id="todolist">Complete Todo App on Frontend Mentor</p>
-          </div>
-          <img
-            src="/assets/icon-cross.svg
+        {todos.map((todo) => (
+          <label key={todo.id} id="list">
+            <div className="todo">
+              <input
+                className="checkbox"
+                type="checkbox"
+                onChange={() => handleCheckboxChange(todo.id)}
+                checked={todo.isCompleted}
+              />
+              <p
+                style={{
+                  textDecoration: todo.isCompleted ? "line-through" : "none",
+                }}
+              >
+                {todo.text}
+              </p>
+            </div>
+            <img
+              src="/assets/icon-cross.svg
           "
-            alt="close"
-          />
-        </label>
+              alt="close"
+            />
+          </label>
+        ))}
         <div className="items">
-          <p>5 items left</p>
-          <p>Clear Completed</p>
+          <p>{todos.filter((todo) => !todo.isCompleted).length} items left</p>
+          <p id="clear" onClick={clearTodo}>
+            Clear Completed
+          </p>
         </div>
       </div>
       <div id="tabs">
         <p className="current">All</p>
-        <p>Active</p>
-        <p>Completed</p>
+        <p id="active" onClick={active}>
+          Active
+        </p>
+        <p id="completed" onClick={completed}>
+          Completed
+        </p>
       </div>
       <p className="hint">Drag and drop to reorder list</p>
     </div>
