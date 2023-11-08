@@ -4,6 +4,9 @@ export default function Hero() {
   const [todos, setTodos] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [newTodo, setNewTodo] = useState("");
+  const [lightModeImageSrc, setLightModeImageSrc] = useState(
+    "/assets/bg-mobile-light.jpg"
+  );
 
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
@@ -30,12 +33,10 @@ export default function Hero() {
       color: isDarkMode ? "var(--DarkGrayishBlue)" : "var(--DarkGrayishBlue)",
     };
 
-    const headerStyle = {
-      backgroundImage: updatedIsDarkMode
-        ? "url('/assets/bg-mobile-dark.jpg')"
-        : "url('/assets/bg-mobile-light.jpg')",
-      height: updatedIsDarkMode ? "200px" : "200px",
-    };
+    const newLightModeImageSrc = isDarkMode
+      ? "/assets/bg-mobile-dark.jpg"
+      : "/assets/bg-mobile-light.jpg";
+    setLightModeImageSrc(newLightModeImageSrc);
 
     const inputStyle = {
       backgroundColor: updatedIsDarkMode ? "hsl(235, 24%, 19%)" : "white",
@@ -60,11 +61,6 @@ export default function Hero() {
 
     document.getElementById("list-container").style.color =
       listContainerStyle.color;
-
-    document.getElementById("header").style.backgroundImage =
-      headerStyle.backgroundImage;
-
-    document.getElementById("header").style.height = headerStyle.height;
 
     document.getElementById("input").style.backgroundColor =
       inputStyle.backgroundColor;
@@ -115,6 +111,11 @@ export default function Hero() {
   return (
     <div className={`container ${!isDarkMode ? "light-mode" : "dark-mode"}`}>
       <header id="header">
+        <img
+          id="light_mode_img"
+          src="/assets/bg-mobile-light.jpg"
+          alt={!isDarkMode ? "light_mode" : "dark_mode"}
+        />
         <div id="head">
           <h1>TODO</h1>
           <img
