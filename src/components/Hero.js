@@ -34,8 +34,8 @@ export default function Hero() {
     };
 
     const newLightModeImageSrc = isDarkMode
-      ? "/assets/bg-mobile-dark.jpg"
-      : "/assets/bg-mobile-light.jpg";
+      ? "/assets/bg-mobile-light.jpg"
+      : "/assets/bg-mobile-dark.jpg";
     setLightModeImageSrc(newLightModeImageSrc);
 
     const inputStyle = {
@@ -113,7 +113,7 @@ export default function Hero() {
       <header id="header">
         <img
           id="light_mode_img"
-          src="/assets/bg-mobile-light.jpg"
+          src={lightModeImageSrc}
           alt={!isDarkMode ? "light_mode" : "dark_mode"}
         />
         <div id="head">
