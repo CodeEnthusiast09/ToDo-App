@@ -2,11 +2,18 @@ import React, { useState } from "react";
 
 export default function Hero() {
   const [todos, setTodos] = useState([]);
+
   const [isDarkMode, setIsDarkMode] = useState(false);
+
   const [newTodo, setNewTodo] = useState("");
+
   const [lightModeImageSrc, setLightModeImageSrc] = useState(
     "/assets/bg-mobile-light.jpg"
   );
+
+  const [listStyle, setListStyle] = useState({
+    borderBottomColor: "var(--LightGrayishBlue)",
+  });
 
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
@@ -47,11 +54,17 @@ export default function Hero() {
       backgroundColor: updatedIsDarkMode ? "hsl(235, 24%, 19%)" : "white",
     };
 
-    const listStyle = {
+    setListStyle({
       borderBottomColor: updatedIsDarkMode
         ? "var(--DarkGrayishBlue)"
         : "var(--LightGrayishBlue)",
-    };
+    });
+
+    // const listStyle = {
+    //   borderBottomColor: updatedIsDarkMode
+    //     ? "var(--DarkGrayishBlue)"
+    //     : "var(--LightGrayishBlue)",
+    // };
 
     document.getElementById("body").style.backgroundColor =
       bodyStyle.backgroundColor;
@@ -70,8 +83,8 @@ export default function Hero() {
     document.getElementById("tabs").style.backgroundColor =
       tabsStyle.backgroundColor;
 
-    document.getElementById("list").style.borderBottomColor =
-      listStyle.borderBottomColor;
+    // document.getElementById("list").style.borderBottomColor =
+    //   listStyle.borderBottomColor;
   };
 
   const handleInputChange = (event) => {
@@ -141,7 +154,7 @@ export default function Hero() {
       </header>
       <div id="list-container">
         {todos.map((todo) => (
-          <label key={todo.id} id="list">
+          <label key={todo.id} id="list" style={listStyle}>
             <div className="todo">
               <input
                 className="checkbox"
