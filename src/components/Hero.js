@@ -15,10 +15,15 @@ export default function Hero() {
     borderBottomColor: "var(--LightGrayishBlue)",
   });
 
+  const [originalTodos, setOriginalTodos] = useState([]);
+
+  const [activeFilter, setActiveFilter] = useState("all");
+
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
     );
+    setOriginalTodos(updatedTodos);
     setTodos(updatedTodos);
   };
 
@@ -60,12 +65,6 @@ export default function Hero() {
         : "var(--LightGrayishBlue)",
     });
 
-    // const listStyle = {
-    //   borderBottomColor: updatedIsDarkMode
-    //     ? "var(--DarkGrayishBlue)"
-    //     : "var(--LightGrayishBlue)",
-    // };
-
     document.getElementById("body").style.backgroundColor =
       bodyStyle.backgroundColor;
 
@@ -82,9 +81,6 @@ export default function Hero() {
 
     document.getElementById("tabs").style.backgroundColor =
       tabsStyle.backgroundColor;
-
-    // document.getElementById("list").style.borderBottomColor =
-    //   listStyle.borderBottomColor;
   };
 
   const handleInputChange = (event) => {
@@ -94,31 +90,37 @@ export default function Hero() {
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       const newTodoItem = {
-        id: todos.length + 1,
+        id: originalTodos.length + 1,
         text: newTodo,
         isCompleted: false,
       };
-      setTodos([...todos, newTodoItem]);
-      setNewTodo(""); // Reset the input field after adding the to-do
+      setOriginalTodos([...originalTodos, newTodoItem]);
+      setTodos([...originalTodos, newTodoItem]); // Update displayed todos list
+      setNewTodo("");
     }
   };
 
-  // TO CLEAR COMPLETED TODO ITEMS
   const clearTodo = () => {
-    const filteredTodos = todos.filter((todo) => !todo.isCompleted);
-    setTodos(filteredTodos);
+    const filteredTodos = originalTodos.filter((todo) => !todo.isCompleted);
+    setOriginalTodos(filteredTodos); // Update original todos list
+    setTodos(filteredTodos); // Update displayed todos list
   };
 
-  // TO SORT ACTIVE TODO ITEMS
   const active = () => {
-    const filteredTodos = todos.filter((todo) => !todo.isCompleted);
-    setTodos(filteredTodos);
+    setActiveFilter("active");
+    const activeTodos = originalTodos.filter((todo) => !todo.isCompleted);
+    setTodos(activeTodos); // Update displayed todos list
   };
 
-  // TO SHOW COMPLETED TO DO LIST
   const completed = () => {
-    const completedTodos = todos.filter((todo) => todo.isCompleted);
-    setTodos(completedTodos);
+    setActiveFilter("completed");
+    const completedTodos = originalTodos.filter((todo) => todo.isCompleted);
+    setTodos(completedTodos); // Update displayed todos list
+  };
+
+  const showAll = () => {
+    setActiveFilter("all");
+    setTodos(originalTodos); // Show all todos
   };
 
   return (
@@ -185,11 +187,25 @@ export default function Hero() {
         </div>
       </div>
       <div id="tabs">
-        <p className="current">All</p>
-        <p id="active" onClick={active}>
+        <p
+          className={`current ${activeFilter === "all" && "active"}`}
+          id="all"
+          onClick={showAll}
+        >
+          All
+        </p>
+        <p
+          className={activeFilter === "active" && "active"}
+          id="active"
+          onClick={active}
+        >
           Active
         </p>
-        <p id="completed" onClick={completed}>
+        <p
+          className={activeFilter === "completed" && "active"}
+          id="completed"
+          onClick={completed}
+        >
           Completed
         </p>
       </div>
