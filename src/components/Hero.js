@@ -100,27 +100,36 @@ export default function Hero() {
     }
   };
 
+  // TO CLEAR COMPLETED TODO
   const clearTodo = () => {
     const filteredTodos = originalTodos.filter((todo) => !todo.isCompleted);
     setOriginalTodos(filteredTodos); // Update original todos list
     setTodos(filteredTodos); // Update displayed todos list
   };
 
+  // TO SORT ACTIVE TODO
   const active = () => {
     setActiveFilter("active");
     const activeTodos = originalTodos.filter((todo) => !todo.isCompleted);
     setTodos(activeTodos); // Update displayed todos list
   };
 
+  // TO SORT COMPLETED TODO
   const completed = () => {
     setActiveFilter("completed");
     const completedTodos = originalTodos.filter((todo) => todo.isCompleted);
     setTodos(completedTodos); // Update displayed todos list
   };
 
+  // TO SHOW ALL TODOS AFTER SORTING
   const showAll = () => {
     setActiveFilter("all");
     setTodos(originalTodos); // Show all todos
+  };
+
+  const handleRemoveTodo = (id) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
   };
 
   return (
@@ -173,9 +182,11 @@ export default function Hero() {
               </p>
             </div>
             <img
+              id="remove"
               src="/assets/icon-cross.svg
           "
               alt="close"
+              onClick={() => handleRemoveTodo(todo.id)}
             />
           </label>
         ))}
