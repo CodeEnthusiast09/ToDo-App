@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Hero() {
   const [todos, setTodos] = useState([]);
@@ -7,9 +7,7 @@ export default function Hero() {
 
   const [newTodo, setNewTodo] = useState("");
 
-  const [lightModeImageSrc, setLightModeImageSrc] = useState(
-    "/assets/bg-mobile-light.jpg"
-  );
+  const [lightModeImageSrc, setLightModeImageSrc] = useState("");
 
   const [listStyle, setListStyle] = useState({
     borderBottomColor: "var(--LightGrayishBlue)",
@@ -26,6 +24,34 @@ export default function Hero() {
     setOriginalTodos(updatedTodos);
     setTodos(updatedTodos);
   };
+
+  useEffect(() => {
+    const setDeviceImage = () => {
+      const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+      if (isMobile) {
+        // Set the mobile image source for smaller screens
+        setLightModeImageSrc(
+          isDarkMode
+            ? "/assets/bg-mobile-dark.jpg"
+            : "/assets/bg-mobile-light.jpg"
+        );
+      } else {
+        // Set the desktop image source for larger screens
+        setLightModeImageSrc(
+          isDarkMode
+            ? "/assets/bg-desktop-dark.jpg"
+            : "/assets/bg-desktop-light.jpg"
+        );
+      }
+    };
+
+    setDeviceImage();
+    window.addEventListener("resize", setDeviceImage);
+
+    return () => {
+      window.removeEventListener("resize", setDeviceImage);
+    };
+  }, [isDarkMode]);
 
   const handleModeToggle = () => {
     setIsDarkMode((prevIsDarkMode) => !prevIsDarkMode);
@@ -45,10 +71,10 @@ export default function Hero() {
       color: isDarkMode ? "var(--DarkGrayishBlue)" : "var(--DarkGrayishBlue)",
     };
 
-    const newLightModeImageSrc = isDarkMode
-      ? "/assets/bg-mobile-light.jpg"
-      : "/assets/bg-mobile-dark.jpg";
-    setLightModeImageSrc(newLightModeImageSrc);
+    // const newLightModeImageSrc = isDarkMode
+    //   ? "/assets/bg-mobile-light.jpg"
+    //   : "/assets/bg-mobile-dark.jpg";
+    // setLightModeImageSrc(newLightModeImageSrc);
 
     const inputStyle = {
       backgroundColor: updatedIsDarkMode ? "hsl(235, 24%, 19%)" : "white",
@@ -134,12 +160,12 @@ export default function Hero() {
 
   return (
     <div className={`container ${!isDarkMode ? "light-mode" : "dark-mode"}`}>
-      <header id="header">
         <img
-          id="light_mode_img"
+          id="mode_img"
           src={lightModeImageSrc}
           alt={!isDarkMode ? "light_mode" : "dark_mode"}
         />
+      <header id="header">
         <div id="head">
           <h1>TODO</h1>
           <img

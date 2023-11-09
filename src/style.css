@@ -28,11 +28,10 @@ body {
 }
 
 header {
-  /* background-image: url("/public/assets/bg-mobile-light.jpg"); */
   height: 200px;
 }
 
-header > img {
+#mode_img {
   width: 100%;
   height: 200px;
   position: absolute;
@@ -186,7 +185,7 @@ input[type="checkbox"]:checked + label {
   color: hsl(236, 9%, 61%);
   font-size: 0.79rem;
   font-weight: 700;
-  margin: 0 6.5% 13% 6.5%;
+  margin: 0 6% 13% 6%;
   padding: 10px 75px;
   position: relative;
   top: 280%;
@@ -195,4 +194,38 @@ input[type="checkbox"]:checked + label {
 
 #clear {
   cursor: pointer;
+}
+
+@media (min-width: 1023px) {
+  header {
+    width: 50%;
+    margin: auto;
+  }
+
+  #head {
+    gap: 68%;
+    justify-content: center;
+  }
+
+  .input::after {
+    top: -2px;
+    left: 7.7%;
+  }
+
+  #list-container {
+    margin: auto;
+    right: 2px;
+    width: 43.75%;
+  }
+
+  #tabs {
+    margin: auto;
+    width: 43.75%;
+  }
+
+  .hint {
+    margin: auto;
+    padding: 60px 75px;
+    width: 25%;
+  }
 }
