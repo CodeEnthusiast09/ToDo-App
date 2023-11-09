@@ -17,6 +17,7 @@ export default function Hero() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
+  // TO CREATE TODO
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
@@ -160,11 +161,11 @@ export default function Hero() {
 
   return (
     <div className={`container ${!isDarkMode ? "light-mode" : "dark-mode"}`}>
-        <img
-          id="mode_img"
-          src={lightModeImageSrc}
-          alt={!isDarkMode ? "light_mode" : "dark_mode"}
-        />
+      <img
+        id="mode_img"
+        src={lightModeImageSrc}
+        alt={!isDarkMode ? "light_mode" : "dark_mode"}
+      />
       <header id="header">
         <div id="head">
           <h1>TODO</h1>
