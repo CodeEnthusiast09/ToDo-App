@@ -51,6 +51,7 @@ header {
 #dark_mode {
   width: 20px;
   height: 20px;
+  cursor: pointer;
 }
 
 #light_mode {
@@ -177,6 +178,10 @@ input[type="checkbox"]:checked + label {
   width: 87.5%;
 }
 
+.tab {
+  cursor: pointer;
+}
+
 .current {
   color: hsl(220, 98%, 61%);
 }
@@ -194,6 +199,14 @@ input[type="checkbox"]:checked + label {
 
 #clear {
   cursor: pointer;
+}
+
+.dark-mode-toggle {
+  transition: transform 0.3s ease-in-out;
+}
+
+.dark-mode-toggle.rotate {
+  transform: rotate(180deg);
 }
 
 @media (min-width: 1023px) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Hero() {
   const [todos, setTodos] = useState([]);
@@ -17,6 +18,8 @@ export default function Hero() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
+  const [reorderedTodos, setReorderedTodos] = useState([]);
+
   // TO CREATE TODO
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
@@ -26,6 +29,7 @@ export default function Hero() {
     setTodos(updatedTodos);
   };
 
+  // TO TOGGLE MODE IMAGE
   useEffect(() => {
     const setDeviceImage = () => {
       const isMobile = window.matchMedia("(max-width: 1023px)").matches;
@@ -54,6 +58,7 @@ export default function Hero() {
     };
   }, [isDarkMode]);
 
+  // FOR TOGGLING MODES
   const handleModeToggle = () => {
     setIsDarkMode((prevIsDarkMode) => !prevIsDarkMode);
 
@@ -71,11 +76,6 @@ export default function Hero() {
         : "white",
       color: isDarkMode ? "var(--DarkGrayishBlue)" : "var(--DarkGrayishBlue)",
     };
-
-    // const newLightModeImageSrc = isDarkMode
-    //   ? "/assets/bg-mobile-light.jpg"
-    //   : "/assets/bg-mobile-dark.jpg";
-    // setLightModeImageSrc(newLightModeImageSrc);
 
     const inputStyle = {
       backgroundColor: updatedIsDarkMode ? "hsl(235, 24%, 19%)" : "white",
@@ -108,12 +108,20 @@ export default function Hero() {
 
     document.getElementById("tabs").style.backgroundColor =
       tabsStyle.backgroundColor;
+
+    // Get the dark_mode element
+    const darkModeImg = document.getElementById("dark_mode");
+
+    // Toggle the rotate class to apply the animation effect
+    darkModeImg.classList.toggle("rotate", !isDarkMode);
   };
 
+  // HANDLES TODO INPUT
   const handleInputChange = (event) => {
     setNewTodo(event.target.value);
   };
 
+  // HANDLES TODO LIST
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       const newTodoItem = {
@@ -137,25 +145,44 @@ export default function Hero() {
   // TO SORT ACTIVE TODO
   const active = () => {
     setActiveFilter("active");
+
     const activeTodos = originalTodos.filter((todo) => !todo.isCompleted);
+
     setTodos(activeTodos); // Update displayed todos list
   };
 
   // TO SORT COMPLETED TODO
   const completed = () => {
     setActiveFilter("completed");
+
     const completedTodos = originalTodos.filter((todo) => todo.isCompleted);
+
     setTodos(completedTodos); // Update displayed todos list
   };
 
   // TO SHOW ALL TODOS AFTER SORTING
   const showAll = () => {
     setActiveFilter("all");
+
     setTodos(originalTodos); // Show all todos
   };
 
   const handleRemoveTodo = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    const updatedTodos = reorderedTodos.filter((todo) => todo.id !== id);
+    setReorderedTodos(updatedTodos);
+  };
+
+  // HANDLES DRAG, DROP AND LIST REORDER
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedTodos = Array.from(reorderedTodos);
+    const [removed] = updatedTodos.splice(result.source.index, 1);
+    updatedTodos.splice(result.destination.index, 0, removed);
+
+    setReorderedTodos(updatedTodos);
     setTodos(updatedTodos);
   };
 
@@ -171,11 +198,14 @@ export default function Hero() {
           <h1>TODO</h1>
           <img
             id="dark_mode"
+            className={`dark-mode-toggle ${isDarkMode ? "rotate" : ""}`}
             onClick={handleModeToggle}
             src={!isDarkMode ? "/assets/icon-moon.svg" : "/assets/icon-sun.svg"}
             alt={!isDarkMode ? "light_mode" : "dark_mode"}
           />
         </div>
+
+        {/* INPUT TODO */}
         <label className="input">
           <input
             id="input"
@@ -190,59 +220,96 @@ export default function Hero() {
           />
         </label>
       </header>
-      <div id="list-container">
-        {todos.map((todo) => (
-          <label key={todo.id} id="list" style={listStyle}>
-            <div className="todo">
-              <input
-                className="checkbox"
-                type="checkbox"
-                onChange={() => handleCheckboxChange(todo.id)}
-                checked={todo.isCompleted}
-              />
-              <p
-                style={{
-                  textDecoration: todo.isCompleted ? "line-through" : "none",
-                }}
-              >
-                {todo.text}
-              </p>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="characters">
+          {(provided) => (
+            <div
+              id="list-container"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {todos.map((todo, index) => (
+                <Draggable
+                  key={todo.id.toString()}
+                  draggableId={todo.id.toString()}
+                  index={index}
+                >
+                  {(provided) => (
+                    <label
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      id="list"
+                      style={listStyle}
+                    >
+                      <div className="todo">
+                        <input
+                          className="checkbox"
+                          type="checkbox"
+                          onChange={() => handleCheckboxChange(todo.id)}
+                          checked={todo.isCompleted}
+                        />
+                        <p
+                          style={{
+                            textDecoration: todo.isCompleted
+                              ? "line-through"
+                              : "none",
+                          }}
+                        >
+                          {todo.text}
+                        </p>
+                      </div>
+                      <img
+                        id="remove"
+                        src="/assets/icon-cross.svg
+                    "
+                        alt="close"
+                        onClick={() => handleRemoveTodo(todo.id)}
+                      />
+                    </label>
+                  )}
+                </Draggable>
+              ))}
+              <div className="items">
+                <p>
+                  {todos.filter((todo) => !todo.isCompleted).length} items left
+                </p>
+                <p id="clear" onClick={clearTodo}>
+                  Clear Completed
+                </p>
+              </div>
             </div>
-            <img
-              id="remove"
-              src="/assets/icon-cross.svg
-          "
-              alt="close"
-              onClick={() => handleRemoveTodo(todo.id)}
-            />
-          </label>
-        ))}
-        <div className="items">
-          <p>{todos.filter((todo) => !todo.isCompleted).length} items left</p>
-          <p id="clear" onClick={clearTodo}>
-            Clear Completed
-          </p>
-        </div>
-      </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div id="tabs">
         <p
-          className={`current ${activeFilter === "all" && "active"}`}
+          className={`tab ${activeFilter === "all" ? "current" : ""}`}
           id="all"
-          onClick={showAll}
+          onClick={() => {
+            showAll();
+            setActiveFilter("all");
+          }}
         >
           All
         </p>
         <p
-          className={activeFilter === "active" && "active"}
+          className={`tab ${activeFilter === "active" ? "current" : ""}`}
           id="active"
-          onClick={active}
+          onClick={() => {
+            active();
+            setActiveFilter("active");
+          }}
         >
           Active
         </p>
         <p
-          className={activeFilter === "completed" && "active"}
+          className={`tab ${activeFilter === "completed" ? "current" : ""}`}
           id="completed"
-          onClick={completed}
+          onClick={() => {
+            completed();
+            setActiveFilter("completed");
+          }}
         >
           Completed
         </p>
