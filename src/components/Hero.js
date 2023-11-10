@@ -167,9 +167,10 @@ export default function Hero() {
     setTodos(originalTodos); // Show all todos
   };
 
+  // REMOVES TODO
   const handleRemoveTodo = (id) => {
     const updatedTodos = reorderedTodos.filter((todo) => todo.id !== id);
-    setReorderedTodos(updatedTodos);
+    setReorderedTodos(updatedTodos); // Update reorderedTodos state
   };
 
   // HANDLES DRAG, DROP AND LIST REORDER
@@ -178,11 +179,11 @@ export default function Hero() {
       return;
     }
 
-    const updatedTodos = Array.from(reorderedTodos);
+    const updatedTodos = Array.from(todos);
     const [removed] = updatedTodos.splice(result.source.index, 1);
     updatedTodos.splice(result.destination.index, 0, removed);
 
-    setReorderedTodos(updatedTodos);
+    setReorderedTodos(updatedTodos); // Update reorderedTodos state
     setTodos(updatedTodos);
   };
 
