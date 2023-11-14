@@ -21,9 +21,9 @@ export default function Hero() {
   const [reorderedTodos, setReorderedTodos] = useState([]);
 
   // TO CREATE TODO
-  const handleCheckboxChange = (id) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+  const handleCheckboxChange = (index) => {
+    const updatedTodos = todos.map((todo, i) =>
+      i === index ? { ...todo, isCompleted: !todo.isCompleted } : todo
     );
     setOriginalTodos(updatedTodos);
     setTodos(updatedTodos);
@@ -122,12 +122,9 @@ export default function Hero() {
   };
 
   // HANDLES TODO LIST
-  let newTodoId = originalTodos.length + 1;
-
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       const newTodoItem = {
-        id: newTodoId++,
         text: newTodo,
         isCompleted: false,
       };
@@ -135,10 +132,6 @@ export default function Hero() {
       setTodos([...originalTodos, newTodoItem]); // Update displayed todos list
       setNewTodo("");
     }
-
-    console.log(originalTodos);
-    console.log(todos);
-    console.log(newTodo);
   };
 
   // TO CLEAR COMPLETED TODO
@@ -174,14 +167,17 @@ export default function Hero() {
   };
 
   // REMOVES TODO ITEM
-  const handleRemoveTodo = (id) => {
+  const handleRemoveTodo = (index) => {
     setOriginalTodos((prevOriginalTodos) => {
-      const updatedOriginalTodos = prevOriginalTodos.filter(
-        (todo) => todo.id !== id
-      );
+      const updatedOriginalTodos = [...prevOriginalTodos];
+      updatedOriginalTodos.splice(index, 1);
       setTodos(updatedOriginalTodos); // Update displayed todos list
+      console.log(updatedOriginalTodos);
       return updatedOriginalTodos;
     });
+    console.log(originalTodos);
+    console.log(todos);
+    console.log(newTodo);
   };
 
   // HANDLES DRAG, DROP AND LIST REORDER
@@ -242,8 +238,8 @@ export default function Hero() {
             >
               {todos.map((todo, index) => (
                 <Draggable
-                  key={todo.id.toString()}
-                  draggableId={todo.id.toString()}
+                  key={index.toString()}
+                  draggableId={index.toString()}
                   index={index}
                 >
                   {(provided) => (
@@ -258,7 +254,7 @@ export default function Hero() {
                         <input
                           className="checkbox"
                           type="checkbox"
-                          onChange={() => handleCheckboxChange(todo.id)}
+                          onChange={() => handleCheckboxChange(index)}
                           checked={todo.isCompleted}
                         />
                         <p
@@ -276,7 +272,7 @@ export default function Hero() {
                         src="/assets/icon-cross.svg
                     "
                         alt="close"
-                        onClick={() => handleRemoveTodo(todo.id)}
+                        onClick={() => handleRemoveTodo(index)}
                       />
                     </label>
                   )}
