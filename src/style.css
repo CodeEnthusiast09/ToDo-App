@@ -169,12 +169,13 @@ input[type="checkbox"]:checked + label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 75px;
+  padding: 15px 45px;
   font-size: 1rem;
   font-weight: 700;
   margin: 0 6.5% 8% 6.5%;
   position: relative;
   top: 248%;
+  text-align: center;
   width: 87.5%;
 }
 
@@ -194,6 +195,7 @@ input[type="checkbox"]:checked + label {
   padding: 10px 75px;
   position: relative;
   top: 280%;
+  text-align: center;
   width: 87.5%;
 }
 
@@ -239,6 +241,15 @@ input[type="checkbox"]:checked + label {
   .hint {
     margin: auto;
     padding: 60px 75px;
-    width: 25%;
+    text-align: center;
+    width: 35%;
+  }
+}
+
+@media (min-width: 768px) {
+  .hint {
+    margin: auto;
+    padding: 60px 75px;
+    text-align: center;
   }
 }

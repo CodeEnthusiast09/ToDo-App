@@ -122,10 +122,12 @@ export default function Hero() {
   };
 
   // HANDLES TODO LIST
+  let newTodoId = originalTodos.length + 1;
+
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       const newTodoItem = {
-        id: originalTodos.length + 1,
+        id: newTodoId++,
         text: newTodo,
         isCompleted: false,
       };
@@ -133,6 +135,10 @@ export default function Hero() {
       setTodos([...originalTodos, newTodoItem]); // Update displayed todos list
       setNewTodo("");
     }
+
+    console.log(originalTodos);
+    console.log(todos);
+    console.log(newTodo);
   };
 
   // TO CLEAR COMPLETED TODO
@@ -167,10 +173,15 @@ export default function Hero() {
     setTodos(originalTodos); // Show all todos
   };
 
-  // REMOVES TODO
+  // REMOVES TODO ITEM
   const handleRemoveTodo = (id) => {
-    const updatedTodos = reorderedTodos.filter((todo) => todo.id !== id);
-    setReorderedTodos(updatedTodos); // Update reorderedTodos state
+    setOriginalTodos((prevOriginalTodos) => {
+      const updatedOriginalTodos = prevOriginalTodos.filter(
+        (todo) => todo.id !== id
+      );
+      setTodos(updatedOriginalTodos); // Update displayed todos list
+      return updatedOriginalTodos;
+    });
   };
 
   // HANDLES DRAG, DROP AND LIST REORDER
@@ -180,10 +191,10 @@ export default function Hero() {
     }
 
     const updatedTodos = Array.from(todos);
+    console.log(updatedTodos);
     const [removed] = updatedTodos.splice(result.source.index, 1);
     updatedTodos.splice(result.destination.index, 0, removed);
 
-    setReorderedTodos(updatedTodos); // Update reorderedTodos state
     setTodos(updatedTodos);
   };
 
