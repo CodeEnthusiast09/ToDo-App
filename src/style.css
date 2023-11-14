@@ -162,6 +162,10 @@ input[type="checkbox"]:checked + label {
   color: hsl(236, 9%, 61%);
 }
 
+#remove {
+  cursor: pointer;
+}
+
 #tabs {
   background-color: var(--VeryLightGray);
   border-radius: 5px;
