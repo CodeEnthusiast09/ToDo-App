@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Hero() {
@@ -18,12 +19,12 @@ export default function Hero() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const [reorderedTodos, setReorderedTodos] = useState([]);
+  // const [reorderedTodos, setReorderedTodos] = useState([]);
 
   // TO CREATE TODO
-  const handleCheckboxChange = (index) => {
-    const updatedTodos = todos.map((todo, i) =>
-      i === index ? { ...todo, isCompleted: !todo.isCompleted } : todo
+  const handleCheckboxChange = (id) => {
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
     );
     setOriginalTodos(updatedTodos);
     setTodos(updatedTodos);
@@ -125,6 +126,7 @@ export default function Hero() {
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
       const newTodoItem = {
+        id: uuidv4(),
         text: newTodo,
         isCompleted: false,
       };
@@ -172,12 +174,8 @@ export default function Hero() {
       const updatedOriginalTodos = [...prevOriginalTodos];
       updatedOriginalTodos.splice(index, 1);
       setTodos(updatedOriginalTodos); // Update displayed todos list
-      console.log(updatedOriginalTodos);
       return updatedOriginalTodos;
     });
-    console.log(originalTodos);
-    console.log(todos);
-    console.log(newTodo);
   };
 
   // HANDLES DRAG, DROP AND LIST REORDER
@@ -238,8 +236,8 @@ export default function Hero() {
             >
               {todos.map((todo, index) => (
                 <Draggable
-                  key={index.toString()}
-                  draggableId={index.toString()}
+                  key={todo.id.toString()}
+                  draggableId={todo.id.toString()}
                   index={index}
                 >
                   {(provided) => (
@@ -254,7 +252,7 @@ export default function Hero() {
                         <input
                           className="checkbox"
                           type="checkbox"
-                          onChange={() => handleCheckboxChange(index)}
+                          onChange={() => handleCheckboxChange(todo.id)}
                           checked={todo.isCompleted}
                         />
                         <p
@@ -272,7 +270,7 @@ export default function Hero() {
                         src="/assets/icon-cross.svg
                     "
                         alt="close"
-                        onClick={() => handleRemoveTodo(index)}
+                        onClick={() => handleRemoveTodo(todo.id)}
                       />
                     </label>
                   )}
