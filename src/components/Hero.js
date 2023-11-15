@@ -169,10 +169,11 @@ export default function Hero() {
   };
 
   // REMOVES TODO ITEM
-  const handleRemoveTodo = (index) => {
+  const handleRemoveTodo = (id) => {
     setOriginalTodos((prevOriginalTodos) => {
-      const updatedOriginalTodos = [...prevOriginalTodos];
-      updatedOriginalTodos.splice(index, 1);
+      const updatedOriginalTodos = prevOriginalTodos.filter(
+        (todo) => todo.id !== id
+      );
       setTodos(updatedOriginalTodos); // Update displayed todos list
       return updatedOriginalTodos;
     });
