@@ -19,7 +19,7 @@ export default function Hero() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  // const [reorderedTodos, setReorderedTodos] = useState([]);
+  const [reorderedTodos, setReorderedTodos] = useState([]);
 
   // TO CREATE TODO
   const handleCheckboxChange = (id) => {
@@ -185,12 +185,11 @@ export default function Hero() {
       return;
     }
 
-    const updatedTodos = Array.from(todos);
-    console.log(updatedTodos);
-    const [removed] = updatedTodos.splice(result.source.index, 1);
-    updatedTodos.splice(result.destination.index, 0, removed);
+    const updatedOriginalTodos = Array.from(originalTodos);
+    const [removed] = updatedOriginalTodos.splice(result.source.index, 1);
+    updatedOriginalTodos.splice(result.destination.index, 0, removed);
 
-    setTodos(updatedTodos);
+    setOriginalTodos(updatedOriginalTodos);
   };
 
   return (
@@ -231,6 +230,7 @@ export default function Hero() {
         <Droppable droppableId="characters">
           {(provided) => (
             <div
+              className="characters"
               id="list-container"
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -247,7 +247,14 @@ export default function Hero() {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       id="list"
-                      style={listStyle}
+                      // style={listStyle}
+                      style={{
+                        ...listStyle,
+                        backgroundColor:
+                          provided.snapshot && provided.snapshot.isDragging
+                            ? "red"
+                            : listStyle.backgroundColor,
+                      }}
                     >
                       <div className="todo">
                         <input
