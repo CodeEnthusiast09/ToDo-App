@@ -70,7 +70,24 @@ export default function Hero() {
     }
   };
 
-  console.log("showInstallPrompt:", showInstallPrompt);
+  // Function to update local storage with the latest todo list
+  const updateLocalStorage = (updatedTodos) => {
+    localStorage.setItem("todoList", JSON.stringify(updatedTodos));
+  };
+
+  // Effect to load todo list from local storage on component mount
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todoList")) || [];
+    console.log("Retrieved todo list from local storage:", storedTodos);
+    setOriginalTodos(storedTodos);
+    setTodos(storedTodos);
+  }, []);
+
+  // Effect to update local storage whenever todos change
+  useEffect(() => {
+    console.log("Updating local storage with todo list:", originalTodos);
+    updateLocalStorage(originalTodos);
+  }, [originalTodos]);
 
   // TO CREATE TODO
   const handleCheckboxChange = (id) => {
