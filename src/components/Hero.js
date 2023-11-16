@@ -18,6 +18,58 @@ export default function Hero() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
+  // State for the deferred install prompt
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  // State to manage the visibility of the custom install prompt
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+
+  // Effect to listen for the beforeinstallprompt event
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event) => {
+      // Prevent the default behavior
+      event.preventDefault();
+
+      // Stash the event so it can be triggered later
+      setDeferredPrompt(event);
+
+      // Show the custom install prompt
+      setShowInstallPrompt(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
+  // Function to handle the custom install prompt
+  const handleInstallPrompt = () => {
+    if (deferredPrompt) {
+      // Show the install prompt
+      deferredPrompt.prompt();
+
+      // Wait for the user to respond to the prompt
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted the install prompt");
+        } else {
+          console.log("User dismissed the install prompt");
+        }
+
+        // Reset deferredPrompt to null
+        setDeferredPrompt(null);
+
+        // Hide the custom install prompt
+        setShowInstallPrompt(false);
+      });
+    }
+  };
+
   // TO CREATE TODO
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
@@ -84,6 +136,18 @@ export default function Hero() {
       backgroundColor: updatedIsDarkMode ? "hsl(235, 24%, 19%)" : "white",
     };
 
+    const installStyle = {
+      backgroundColor: updatedIsDarkMode
+        ? "var(----VeryDarkDesaturatedBlue)"
+        : "var(--VeryLightGray)",
+    };
+
+    const dismissStyle = {
+      backgroundColor: updatedIsDarkMode
+        ? "var(----VeryDarkDesaturatedBlue)"
+        : "var(--VeryLightGray)",
+    };
+
     setListStyle({
       borderBottomColor: updatedIsDarkMode
         ? "var(--DarkGrayishBlue)"
@@ -106,6 +170,12 @@ export default function Hero() {
 
     document.getElementById("tabs").style.backgroundColor =
       tabsStyle.backgroundColor;
+
+    document.getElementById("install").style.backgroundColor =
+      installStyle.backgroundColor;
+
+    document.getElementById("dismiss").style.backgroundColor =
+      dismissStyle.backgroundColor;
 
     // Get the dark_mode element
     const darkModeImg = document.getElementById("dark_mode");
@@ -276,6 +346,17 @@ export default function Hero() {
           Completed
         </p>
       </div>
+      {showInstallPrompt && (
+        <div className="install-prompt">
+          <p>Install the app</p>
+          <button id="install" onClick={handleInstallPrompt}>
+            Install🤗
+          </button>
+          <button id="dismiss" onClick={() => setShowInstallPrompt(false)}>
+            Dismiss😞
+          </button>
+        </div>
+      )}
       <p className="hint">
         Coded by{" "}
         <a href="https://github.com/CodeEnthusiast09">𝕮𝖔𝖉𝖊𝕰𝖓𝖙𝖍𝖚𝖘𝖎𝖆𝖘𝖙 𝕴𝖃</a>

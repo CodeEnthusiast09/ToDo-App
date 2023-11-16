@@ -209,6 +209,28 @@ input[type="checkbox"]:checked + label {
   text-decoration: none;
 }
 
+.install-prompt {
+  color: hsl(236, 9%, 61%);
+  font-size: 0.79rem;
+  font-weight: 700;
+  margin: 0 6% 6% 6%;
+  padding: 10px 75px;
+  position: relative;
+  top: 280%;
+  text-align: center;
+  width: 87.5%;
+}
+
+.install-prompt > button {
+  border: 1px solid hsl(236, 9%, 61%);
+  border-radius: 5px;
+  font-family: "Josefin Sans", sans-serif;
+  margin: 15px 10px 0px 0px;
+  padding: 5px 10px;
+  color: hsl(236, 9%, 61%);
+  font-weight: 700;
+}
+
 #clear {
   cursor: pointer;
 }
