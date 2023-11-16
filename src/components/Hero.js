@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { handleInstallPrompt } from "./PromptInstall";
+import { getStoredTodos, updateLocalStorage } from "./localStorageUtils";
 
 export default function Hero() {
   const [todos, setTodos] = useState([]);
@@ -48,44 +50,20 @@ export default function Hero() {
   }, []);
 
   // Function to handle the custom install prompt
-  const handleInstallPrompt = () => {
-    if (deferredPrompt) {
-      // Show the install prompt
-      deferredPrompt.prompt();
-
-      // Wait for the user to respond to the prompt
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
-        } else {
-          console.log("User dismissed the install prompt");
-        }
-
-        // Reset deferredPrompt to null
-        setDeferredPrompt(null);
-
-        // Hide the custom install prompt
-        setShowInstallPrompt(false);
-      });
-    }
-  };
-
-  // Function to update local storage with the latest todo list
-  const updateLocalStorage = (updatedTodos) => {
-    localStorage.setItem("todoList", JSON.stringify(updatedTodos));
+  const handleInstallPromptClick = () => {
+    handleInstallPrompt(deferredPrompt);
+    setShowInstallPrompt(false);
   };
 
   // Effect to load todo list from local storage on component mount
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todoList")) || [];
-    console.log("Retrieved todo list from local storage:", storedTodos);
+    const storedTodos = getStoredTodos();
     setOriginalTodos(storedTodos);
     setTodos(storedTodos);
   }, []);
 
   // Effect to update local storage whenever todos change
   useEffect(() => {
-    console.log("Updating local storage with todo list:", originalTodos);
     updateLocalStorage(originalTodos);
   }, [originalTodos]);
 
@@ -368,7 +346,7 @@ export default function Hero() {
       {showInstallPrompt && (
         <div className="install-prompt">
           <p>Install the app</p>
-          <button id="install" onClick={handleInstallPrompt}>
+          <button id="install" onClick={handleInstallPromptClick}>
             Install🤗
           </button>
           <button id="dismiss" onClick={() => setShowInstallPrompt(false)}>
