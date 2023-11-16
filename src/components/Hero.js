@@ -70,6 +70,8 @@ export default function Hero() {
     }
   };
 
+  console.log("showInstallPrompt:", showInstallPrompt);
+
   // TO CREATE TODO
   const handleCheckboxChange = (id) => {
     const updatedTodos = todos.map((todo) =>
