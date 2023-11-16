@@ -196,7 +196,7 @@ input[type="checkbox"]:checked + label {
   font-size: 0.79rem;
   font-weight: 700;
   margin: 0 6% 13% 6%;
-  padding: 10px 75px;
+  padding: 10px 50px;
   position: relative;
   top: 280%;
   text-align: center;
@@ -214,7 +214,7 @@ input[type="checkbox"]:checked + label {
   font-size: 0.79rem;
   font-weight: 700;
   margin: 0 6% 6% 6%;
-  padding: 10px 75px;
+  padding: 10px 40px;
   position: relative;
   top: 280%;
   text-align: center;
@@ -224,6 +224,7 @@ input[type="checkbox"]:checked + label {
 .install-prompt > button {
   border: 1px solid hsl(236, 9%, 61%);
   border-radius: 5px;
+  cursor: pointer;
   font-family: "Josefin Sans", sans-serif;
   margin: 15px 10px 0px 0px;
   padding: 5px 10px;
@@ -272,7 +273,7 @@ input[type="checkbox"]:checked + label {
 
   .hint {
     margin: auto;
-    padding: 60px 75px;
+    padding: 0px 60px 75px;
     text-align: center;
     width: 35%;
   }
@@ -285,13 +286,27 @@ input[type="checkbox"]:checked + label {
   }
 
   #tabs {
-    margin: auto;
+    margin: 0px auto 6%;
     width: 43.75%;
+  }
+
+  .install-prompt {
+    margin: 3% 6% 3% 6%;
   }
 
   .hint {
     margin: auto;
-    padding: 60px 75px;
+    padding: 0px 60px 75px;
     text-align: center;
+  }
+}
+
+@media (max-width: 4000px) {
+  #tabs {
+    margin: 0px auto 3%;
+  }
+
+  .install-prompt {
+    margin: 1% 6% 1% 6%;
   }
 }
