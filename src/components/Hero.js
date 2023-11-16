@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Hero() {
   const [todos, setTodos] = useState([]);
@@ -18,8 +17,6 @@ export default function Hero() {
   const [originalTodos, setOriginalTodos] = useState([]);
 
   const [activeFilter, setActiveFilter] = useState("all");
-
-  const [reorderedTodos, setReorderedTodos] = useState([]);
 
   // TO CREATE TODO
   const handleCheckboxChange = (id) => {
@@ -178,20 +175,6 @@ export default function Hero() {
       return updatedOriginalTodos;
     });
   };
-
-  // HANDLES DRAG, DROP AND LIST REORDER
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const updatedOriginalTodos = Array.from(originalTodos);
-    const [removed] = updatedOriginalTodos.splice(result.source.index, 1);
-    updatedOriginalTodos.splice(result.destination.index, 0, removed);
-
-    setOriginalTodos(updatedOriginalTodos);
-  };
-
   return (
     <div className={`container ${!isDarkMode ? "light-mode" : "dark-mode"}`}>
       <img
@@ -226,76 +209,41 @@ export default function Hero() {
           />
         </label>
       </header>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="characters">
-          {(provided) => (
-            <div
-              className="characters"
-              id="list-container"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {todos.map((todo, index) => (
-                <Draggable
-                  key={todo.id.toString()}
-                  draggableId={todo.id.toString()}
-                  index={index}
-                >
-                  {(provided) => (
-                    <label
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      id="list"
-                      // style={listStyle}
-                      style={{
-                        ...listStyle,
-                        backgroundColor:
-                          provided.snapshot && provided.snapshot.isDragging
-                            ? "red"
-                            : listStyle.backgroundColor,
-                      }}
-                    >
-                      <div className="todo">
-                        <input
-                          className="checkbox"
-                          type="checkbox"
-                          onChange={() => handleCheckboxChange(todo.id)}
-                          checked={todo.isCompleted}
-                        />
-                        <p
-                          style={{
-                            textDecoration: todo.isCompleted
-                              ? "line-through"
-                              : "none",
-                          }}
-                        >
-                          {todo.text}
-                        </p>
-                      </div>
-                      <img
-                        id="remove"
-                        src="/assets/icon-cross.svg
-                    "
-                        alt="close"
-                        onClick={() => handleRemoveTodo(todo.id)}
-                      />
-                    </label>
-                  )}
-                </Draggable>
-              ))}
-              <div className="items">
-                <p>
-                  {todos.filter((todo) => !todo.isCompleted).length} items left
-                </p>
-                <p id="clear" onClick={clearTodo}>
-                  Clear Completed
-                </p>
-              </div>
+      <div id="list-container">
+        {todos.map((todo, index) => (
+          <label id="list" style={listStyle} key={todo.id}>
+            <div className="todo">
+              <input
+                className="checkbox"
+                type="checkbox"
+                onChange={() => handleCheckboxChange(todo.id)}
+                checked={todo.isCompleted}
+              />
+              <p
+                style={{
+                  textDecoration: todo.isCompleted ? "line-through" : "none",
+                }}
+              >
+                {todo.text}
+              </p>
             </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+            <img
+              id="remove"
+              src="/assets/icon-cross.svg
+                    "
+              alt="close"
+              onClick={() => handleRemoveTodo(todo.id)}
+            />
+          </label>
+        ))}
+        <div className="items">
+          <p>{todos.filter((todo) => !todo.isCompleted).length} items left</p>
+          <p id="clear" onClick={clearTodo}>
+            Clear Completed
+          </p>
+        </div>
+      </div>
+
       <div id="tabs">
         <p
           className={`tab ${activeFilter === "all" ? "current" : ""}`}
@@ -328,7 +276,10 @@ export default function Hero() {
           Completed
         </p>
       </div>
-      <p className="hint">Drag and drop to reorder list</p>
+      <p className="hint">
+        Coded by{" "}
+        <a href="https://github.com/CodeEnthusiast09">𝕮𝖔𝖉𝖊𝕰𝖓𝖙𝖍𝖚𝖘𝖎𝖆𝖘𝖙 𝕴𝖃</a>
+      </p>
     </div>
   );
 }

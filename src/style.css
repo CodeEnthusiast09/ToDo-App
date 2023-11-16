@@ -203,6 +203,12 @@ input[type="checkbox"]:checked + label {
   width: 87.5%;
 }
 
+.hint > a {
+  color: hsl(236, 9%, 61%);
+  font-size: 1rem;
+  text-decoration: none;
+}
+
 #clear {
   cursor: pointer;
 }
@@ -251,6 +257,16 @@ input[type="checkbox"]:checked + label {
 }
 
 @media (min-width: 768px) {
+  .input::after {
+    top: -2px;
+    left: 7.7%;
+  }
+
+  #tabs {
+    margin: auto;
+    width: 43.75%;
+  }
+
   .hint {
     margin: auto;
     padding: 60px 75px;
